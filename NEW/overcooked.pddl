@@ -53,6 +53,7 @@
             	(at end (chef-at ?c ?there))
                  (at start (not(foodoccupied ?here)))
                       (at end (foodoccupied ?there))
+                      (at end (not(foodoccupied ?here)))
                       (at start (where_process ?p ?o ?there))
                  (at end (not (where_process ?p ?o ?here))))
                  
