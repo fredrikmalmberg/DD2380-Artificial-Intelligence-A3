@@ -25,8 +25,7 @@
 )
 
 (:predicates
-	(station-occupied		?s - station); There is a chef at the station
-	;(station-has			?s - station ?i - ingredient);if this station is occupied by FOOD (process of the meal in the order)
+	(station-occupied		?s - station); There is a chef WORKING at the station
 	(chef-at				?c - chef   ?s - station);
 	(chef-available			?c - chef)
 	(movable_object-at		?mo - movable_object ?s - station)
@@ -52,18 +51,17 @@
 	:condition (and
 				(at start (chef-at ?c ?here))
 				(at start (chef-available ?c ))
-				(at start (not (station-occupied ?there))); This actually should be at end...
+
 				(at start (movable_object-at ?o ?here ))
 	)
 
 	:effect (and
-				(at start (not(chef-at ?c ?here)))
+				(at start (not (chef-at ?c ?here)))
 				(at start (not (chef-available ?c )))
 				(at end (chef-at ?c ?there))
 				(at end (chef-available ?c ))
+
 				(at start (not (movable_object-at ?o ?here)))
-				(at start (not (station-occupied ?here)))
-				(at end (station-occupied ?there))
 				(at end (movable_object-at ?o ?there))
 	)
 )
@@ -74,15 +72,12 @@
 	:condition (and
 				(at start(chef-at ?c ?from))
 				(at start (chef-available ?c ))
-				(at start (not (station-occupied ?to)))
 	)
 	:effect (and
 				(at start (not (chef-at ?c ?from)))
 				(at start (not (chef-available ?c )))
-				(at start (not (station-occupied ?from)))
 				(at end (chef-at ?c ?to))
 				(at end (chef-available ?c ))
-				(at end (station-occupied ?to))
 	)
 )
 
@@ -94,7 +89,7 @@
 				(at start(chef-at ?c ?s))
 				(at start (chef-available ?c))
 
-;				(at start (not (station-occupied ?s)))
+				(at start (not (station-occupied ?s)))
 
 				(at start (movable_object-at ?t ?s))
 				(at start (movable_object-at ?l ?s))
@@ -106,8 +101,8 @@
 	    		(at start (not (chef-available ?c)))
 				(at end (chef-available ?c))
 
-;				(at start (station-occupied ?s))
-;				(at end (not (station-occupied ?s)))
+				(at start (station-occupied ?s))
+				(at end (not (station-occupied ?s)))
 
 				(at start (not (movable_object-at ?t ?s )))
 				(at start (not (movable_object-at ?l ?s )))
@@ -122,7 +117,7 @@
 				(at start (chef-at ?c ?s))
 				(at start (chef-available ?c))
 
-;				(at start (not (station-occupied ?s)))
+				(at start (not (station-occupied ?s)))
 
 				(at start (movable_object-at ?i ?s))
 				(at start (not (is-cut ?i)))
@@ -131,8 +126,8 @@
 	    		(at start (not (chef-available ?c)))
 				(at end (chef-available ?c))
 				
-;				(at start (station-occupied ?s))
-;				(at end (not (station-occupied ?s)))
+				(at start (station-occupied ?s))
+				(at end (not (station-occupied ?s)))
 				
 				(at end (is-cut ?i))
 	)
