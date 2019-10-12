@@ -9,15 +9,15 @@
 (:types
 	chef - object
 
-	movable_object - object
-
-	dish - movable_object
-	salad - dish
-
 	station - object
 	cutting_station - station
 	delivery_station - station
 	put_on_plate_station - station
+
+	movable_object - object
+
+	dish - movable_object
+	salad - dish
 
 	ingredient - movable_object
 	tomato - ingredient
@@ -25,22 +25,26 @@
 )
 
 (:predicates
-	(station-occupied		?s - station); There is a chef WORKING at the station
 	(chef-at				?c - chef   ?s - station);
 	(chef-available			?c - chef)
+
+	(station-occupied		?s - station); There is a chef WORKING at the station
+
 	(movable_object-at		?mo - movable_object ?s - station)
-	(is-cut					?i - ingredient)
+
 	(delivered				?d - dish)
+
+	(is-cut					?i - ingredient)
 )
 
 (:durative-action deliver
 	:parameters (?st - delivery_station ?d - dish)
 	:duration (= ?duration 1)
 	:condition (and
-				(at start(movable_object-at ?d ?st))
+				(at start (movable_object-at ?d ?st))
 	)
 	:effect (and
-				(at end(not (movable_object-at ?d ?st)))
+				(at end (not (movable_object-at ?d ?st)))
 				(at end (delivered ?d))
 	)
 )
