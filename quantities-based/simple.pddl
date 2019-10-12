@@ -4,7 +4,7 @@
 
 (:objects
 	chef1				- chef
-;	chef2				- chef
+	chef2				- chef
 
 	; Stations
 	storage_room1		- station
@@ -35,8 +35,8 @@
 	(chef-at chef1 storage_room1)
 	(chef-available chef1)
 
-;	(chef-at chef2 storage_room1)
-;	(chef-available chef2)
+	(chef-at chef2 storage_room1)
+	(chef-available chef2)
 
 	; Items in storage room
 	(= (num-items-at tomato storage_room1) 5)
