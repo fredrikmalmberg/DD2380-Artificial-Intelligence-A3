@@ -1,36 +1,37 @@
 (define (domain overcooked)
+
 (:requirements
-        :typing
-        :durative-actions 
-        :numeric-fluents
-		:negative-preconditions)
+	:typing
+	:durative-actions 
+	:numeric-fluents
+	:negative-preconditions)
 
 (:types
-  chef - object               	  ;
+	chef - object
 
-  movable_object - object
+	movable_object - object
 
-  dish - movable_object                   ;
-  salad - dish
+	dish - movable_object
+	salad - dish
 
-  station - object
-  cutting_station - station                ;
-  delivery_station - station                ;
-  put_on_plate_station - station                ;
-  
-  ingredient - movable_object
-  tomato - ingredient
-  lettuce - ingredient
+	station - object
+	cutting_station - station
+	delivery_station - station
+	put_on_plate_station - station
+
+	ingredient - movable_object
+	tomato - ingredient
+	lettuce - ingredient
 )
 
 (:predicates
-	(station-occupied       ?s - station); There is a chef at the station
-	;(station-has            ?s - station ?i - ingredient);if this station is occupied by FOOD (process of the meal in the order)
-	(chef-at                ?c - chef   ?s - station);
-    (chef-available         ?c - chef)
-    (movable_object-at		?mo - movable_object ?s - station)
+	(station-occupied		?s - station); There is a chef at the station
+	;(station-has			?s - station ?i - ingredient);if this station is occupied by FOOD (process of the meal in the order)
+	(chef-at				?c - chef   ?s - station);
+	(chef-available			?c - chef)
+	(movable_object-at		?mo - movable_object ?s - station)
 	(is-cut					?i - ingredient)
-    (delivered				?d - dish)
+	(delivered				?d - dish)
 )
 
 (:durative-action deliver
@@ -46,22 +47,24 @@
 )
 
 (:durative-action move_item
-    :parameters (?c - chef ?here - station ?there - station ?o - movable_object )
+	:parameters (?c - chef ?here - station ?there - station ?o - movable_object )
 	:duration (= ?duration 2)
-    :condition (and (at start (chef-at ?c ?here))
-    				(at start (chef-available ?c ))
-    				(at start (not (station-occupied ?there))); This actually should be at end...
-    				(at start (movable_object-at ?o ?here ))
+	:condition (and
+				(at start (chef-at ?c ?here))
+				(at start (chef-available ?c ))
+				(at start (not (station-occupied ?there))); This actually should be at end...
+				(at start (movable_object-at ?o ?here ))
 	)
 
-    :effect (and (at start (not(chef-at ?c ?here)))
-    				(at start (not (chef-available ?c )))
-            		(at end (chef-at ?c ?there))
-                	(at end (chef-available ?c ))
-            		(at start (not (movable_object-at ?o ?here)))
-            		(at start (not (station-occupied ?here)))
-            		(at end (station-occupied ?there))
-            		(at end (movable_object-at ?o ?there))
+	:effect (and
+				(at start (not(chef-at ?c ?here)))
+				(at start (not (chef-available ?c )))
+				(at end (chef-at ?c ?there))
+				(at end (chef-available ?c ))
+				(at start (not (movable_object-at ?o ?here)))
+				(at start (not (station-occupied ?here)))
+				(at end (station-occupied ?there))
+				(at end (movable_object-at ?o ?there))
 	)
 )
 
