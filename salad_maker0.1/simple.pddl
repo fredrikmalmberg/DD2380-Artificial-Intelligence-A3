@@ -3,17 +3,21 @@
 (:domain overcooked)
 
 (:objects
-	chef1 chef2			- chef
+	chef1				- chef
+;	chef2				- chef
 
 	storage_room1		- station
-	delivery_station1	- delivery_station
 	cutting_station1	- cutting_station
 	put_on_plate_station1 - put_on_plate_station 
+	delivery_station1	- delivery_station
 
-	salad1 salad2		- salad
+	tomato				- tomato_type
+	lettuce				- lettuce_type
 
-	tomato1	tomato2		- tomato
-	lettuce1 lettuce2	- lettuce
+	cut_tomato			- cut_tomato_type
+	cut_lettuce			- cut_lettuce_type
+
+	salad				- salad_type
 
 	order1 order2		- order
 )
@@ -22,16 +26,26 @@
 	(chef-at chef1 storage_room1)
 	(chef-available chef1)
 
-	(chef-at chef2 storage_room1)
-	(chef-available chef2)
+;	(chef-at chef2 storage_room1)
+;	(chef-available chef2)
 
-	(movable_object-at tomato1 storage_room1)
-	(movable_object-at tomato2 storage_room1)
-	(movable_object-at lettuce1 storage_room1)
-	(movable_object-at lettuce2 storage_room1)
+	(= (num-items-at tomato storage_room1) 5)
+	(= (num-items-at lettuce storage_room1) 5)
 
-	(order-has-dish order1 salad1)
-	(order-has-dish order2 salad2)
+	(= (num-items-at tomato cutting_station1) 0)
+	(= (num-items-at lettuce cutting_station1) 0)
+
+	(= (num-items-at cut_tomato cutting_station1) 0)
+	(= (num-items-at cut_lettuce cutting_station1) 0)
+
+	(= (num-items-at cut_tomato put_on_plate_station1) 0)
+	(= (num-items-at cut_lettuce put_on_plate_station1) 0)
+
+	(= (num-items-at salad put_on_plate_station1) 0)
+	(= (num-items-at salad delivery_station1) 0)
+
+	(order-has-dish order1 salad)
+	(order-has-dish order2 salad)
 )
 
 (:goal 
