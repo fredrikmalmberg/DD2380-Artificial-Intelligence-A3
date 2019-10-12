@@ -7,28 +7,41 @@
 	:negative-preconditions)
 
 (:types
+	; Chef
 	chef - object
 
+	; Stations
 	station - object
 	cutting_station - station
+	cooking_station - station
 	delivery_station - station
 	put_on_plate_station - station
 
+	; Items
 	movable_item_type - object
 
+	; Ingredient types
 	ingredient_type - movable_item_type
 
+	; Unprepared ingredient types
 	tomato_type - ingredient_type
 	lettuce_type - ingredient_type
+	pasta_type - ingredient_type
 
+	; Prepared ingredients
 	cut_ingredient_type - ingredient_type
-
 	cut_tomato_type - cut_ingredient_type
 	cut_lettuce_type - cut_ingredient_type
 
+	cooked_ingredient_type - ingredient_type
+	cooked_pasta_type - cooked_ingredient_type
+
+	; Dishes
 	dish - movable_item_type
 	salad_type - dish
+	pasta_dish_type - dish
 
+	; Orders
 	order - object
 )
 
@@ -62,7 +75,7 @@
 
 (:durative-action move-item
 	:parameters (?c - chef ?here - station ?there - station ?mit - movable_item_type)
-	:duration (= ?duration 2)
+	:duration (= ?duration 1)
 	:condition (and
 				(at start (chef-at ?c ?here))
 				(at start (chef-available ?c ))
@@ -83,7 +96,7 @@
 
 (:durative-action move-chef
 	:parameters (?c - chef ?from - station ?to - station)
-	:duration (= ?duration 2)
+	:duration (= ?duration 1)
 	:condition (and
 				(at start(chef-at ?c ?from))
 				(at start (chef-available ?c ))
@@ -122,9 +135,55 @@
 	)
 )
 
+(:durative-action prepare-pasta
+	:parameters (?c - chef ?s - put_on_plate_station ?cpt - cooked_pasta_type ?pasta_dish - pasta_dish_type)
+	:duration (= ?duration 2)
+	:condition (and
+				(at start(chef-at ?c ?s))
+				(at start (chef-available ?c))
+
+				(at start (not (station-occupied ?s)))
+
+				(at start (> (num-items-at ?cpt ?s) 0))
+	)
+	:effect (and
+	    		(at start (not (chef-available ?c)))
+				(at end (chef-available ?c))
+
+				(at start (station-occupied ?s))
+				(at end (not (station-occupied ?s)))
+
+				(at start (decrease (num-items-at ?cpt ?s) 1))
+				(at end (increase (num-items-at ?pasta_dish ?s) 1))
+	)
+)
+
 (:durative-action cut
 	:parameters (?c - chef ?s - cutting_station ?i - ingredient_type ?ci - cut_ingredient_type)
 	:duration (= ?duration 2)
+	:condition (and
+				(at start (chef-at ?c ?s))
+				(at start (chef-available ?c))
+
+				(at start (not (station-occupied ?s)))
+
+				(at start (> (num-items-at ?i ?s) 0))
+	)
+	:effect (and
+	    		(at start (not (chef-available ?c)))
+				(at end (chef-available ?c))
+				
+				(at start (station-occupied ?s))
+				(at end (not (station-occupied ?s)))
+				
+				(at start (decrease (num-items-at ?i ?s) 1))
+				(at end (increase (num-items-at ?ci ?s) 1))
+	)
+)
+
+(:durative-action cook
+	:parameters (?c - chef ?s - cooking_station ?i - ingredient_type ?ci - cooked_ingredient_type)
+	:duration (= ?duration 3)
 	:condition (and
 				(at start (chef-at ?c ?s))
 				(at start (chef-available ?c))
