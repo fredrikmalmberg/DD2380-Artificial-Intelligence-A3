@@ -10,10 +10,12 @@
 	cutting_station1	- cutting_station
 	put_on_plate_station1 - put_on_plate_station 
 
-	salad1				- salad
+	salad1 salad2		- salad
 
-	tomato1				- tomato
-	lettuce1			- lettuce
+	tomato1	tomato2		- tomato
+	lettuce1 lettuce2	- lettuce
+
+	order1 order2		- order
 )
 
 (:init
@@ -24,12 +26,18 @@
 	(chef-available chef2)
 
 	(movable_object-at tomato1 storage_room1)
+	(movable_object-at tomato2 storage_room1)
 	(movable_object-at lettuce1 storage_room1)
+	(movable_object-at lettuce2 storage_room1)
+
+	(order-has-dish order1 salad1)
+	(order-has-dish order2 salad2)
 )
 
 (:goal 
 	(and
-		(delivered salad1)
+		(delivered order1)
+		(delivered order2)
 	)
 )
 

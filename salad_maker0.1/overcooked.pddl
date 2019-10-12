@@ -22,6 +22,8 @@
 	ingredient - movable_object
 	tomato - ingredient
 	lettuce - ingredient
+
+	order - object
 )
 
 (:predicates
@@ -32,20 +34,23 @@
 
 	(movable_object-at		?mo - movable_object ?s - station)
 
-	(delivered				?d - dish)
+	(delivered				?o - order)
 
 	(is-cut					?i - ingredient)
+
+	(order-has-dish			?o - order ?d - dish)
 )
 
 (:durative-action deliver
-	:parameters (?st - delivery_station ?d - dish)
+	:parameters (?st - delivery_station ?o - order ?d - dish)
 	:duration (= ?duration 1)
 	:condition (and
+				(at start (order-has-dish ?o ?d))
 				(at start (movable_object-at ?d ?st))
 	)
 	:effect (and
-				(at end (not (movable_object-at ?d ?st)))
-				(at end (delivered ?d))
+				(at start (not (movable_object-at ?d ?st)))
+				(at end (delivered ?o))
 	)
 )
 
