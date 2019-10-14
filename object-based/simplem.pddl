@@ -1,6 +1,6 @@
-(define (problem simple)
+(define (problem simplem)
 
-(:domain overcooked)
+(:domain overcookedm)
 
 (:objects
 	chef1				- chef
@@ -22,7 +22,7 @@
 	pasta1     			- pasta
 	fish1  - fish
 	potato1 - potato
-	sause1  - sause
+	sauce1  - sauce
 	dough1 - dough
 	topping1 - bag_topping
 	unpizza1 - unbakedpizza
@@ -52,10 +52,10 @@
 	(item-at pasta1 storage_room1)
 	;(item-at pasta2 storage_room1)
 	;
-	(item-at sause1 storage_room1)
-	;(item-at sause2 storage_room1)
-	;(item-at sause3 storage_room1)
-	;(item-at sause4 storage_room1)
+	(item-at sauce1 storage_room1)
+	;(item-at sauce2 storage_room1)
+	;(item-at sauce3 storage_room1)
+	;(item-at sauce4 storage_room1)
 
 	(item-at fish1 storage_room1)
 	;(item-at fish2 storage_room1)

@@ -1,4 +1,4 @@
-(define (domain overcooked)
+(define (domain overcookedm)
 
 (:requirements
 	:typing
@@ -29,7 +29,7 @@
 	tomato - ingredient
 	lettuce - ingredient
 	pasta - ingredient
-	sause - ingredient
+	sauce - ingredient
 	fish  - ingredient
 	potato - ingredient
 	bag_topping - ingredient
@@ -188,7 +188,7 @@
 	)
 )
 (:durative-action prepare-fishchip
-	:parameters (?c - chef ?s - put_on_plate_station ?ss - sause ?f - fish ?p - potato ?fc - fishchip)
+	:parameters (?c - chef ?s - put_on_plate_station ?ss - sauce ?f - fish ?p - potato ?fc - fishchip)
 	:duration (= ?duration 2)
 	:condition (and (at start (chef-at				?c   ?s))
 					   (at start (chef-available ?c))
