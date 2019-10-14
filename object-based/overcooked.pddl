@@ -4,6 +4,7 @@
 	:typing
 	:durative-actions 
 	:numeric-fluents
+	:object-fluents
 	:negative-preconditions)
 
 (:types
@@ -28,13 +29,19 @@
 	lettuce - ingredient
 	pasta - ingredient
 
-	; Meals
-	meal - movable_item
-	salad - meal
-	pasta_meal - meal
+	; Plates
+	plate - movable_item
+
+	; Dishes
+	dish - object
 
 	; Orders
 	order - object
+)
+
+(:constants
+	salad - dish
+	pasta-dish - dish
 )
 
 (:predicates
@@ -48,20 +55,24 @@
 	(is-cut					?i - ingredient)
 	(is-cooked				?i - ingredient)
 
+	(plate-is-occupied		?p)
+	(plate-is-dish			?p - plate ?d - dish)
+
 	(delivered				?o - order)
 
-	(order-is-meal			?o - order ?m - meal)
+	(order-is				?o - order ?d - dish)
 )
 
 (:durative-action deliver
-	:parameters (?st - delivery_station ?o - order ?m - meal)
+	:parameters (?st - delivery_station ?o - order ?p - plate ?d - dish)
 	:duration (= ?duration 1)
 	:condition (and
-				(at start (order-is-meal ?o ?m))
-				(at start (item-at ?m ?st))
+				(at start (order-is ?o ?d))
+				(at start (plate-is-dish ?p ?d))
+				(at start (item-at ?p ?st))
 	)
 	:effect (and
-				(at start (not (item-at ?m ?st)))
+				(at start (not (item-at ?p ?st)))
 				(at end (delivered ?o))
 	)
 )
@@ -104,7 +115,7 @@
 
 
 (:durative-action prepare-salad
-	:parameters (?c - chef ?s - put_on_plate_station ?t - tomato ?l - lettuce ?salad - salad)
+	:parameters (?c - chef ?s - put_on_plate_station ?t - tomato ?l - lettuce ?p - plate)
 	:duration (= ?duration 2)
 	:condition (and
 				(at start(chef-at ?c ?s))
@@ -114,9 +125,12 @@
 
 				(at start (item-at ?t ?s))
 				(at start (item-at ?l ?s))
+				(at start (item-at ?p ?s))
 
 				(at start (is-cut ?t))
 				(at start (is-cut ?l))
+
+				(at start (not (plate-is-occupied ?p)))
 	)
 	:effect (and
 	    		(at start (not (chef-available ?c)))
@@ -127,12 +141,14 @@
 
 				(at start (not (item-at ?t ?s)))
 				(at start (not (item-at ?l ?s)))
-				(at end (item-at ?salad ?s))
+
+				(at end (plate-is-dish ?p salad))
+				(at start (plate-is-occupied ?p))
 	)
 )
 
 (:durative-action prepare-pasta
-	:parameters (?c - chef ?s - put_on_plate_station ?p - pasta ?pd - pasta_meal)
+	:parameters (?c - chef ?s - put_on_plate_station ?pa - pasta ?pl - plate)
 	:duration (= ?duration 2)
 	:condition (and
 				(at start (chef-at ?c ?s))
@@ -140,8 +156,12 @@
 
 				(at start (not (station-occupied ?s)))
 
-				(at start (item-at ?p ?s))
-				(at start (is-cooked ?p))
+				(at start (item-at ?pa ?s))
+				(at start (item-at ?pl ?s))
+
+				(at start (is-cooked ?pa))
+
+				(at start (not (plate-is-occupied ?pl)))
 	)
 	:effect (and
 	    		(at start (not (chef-available ?c)))
@@ -150,8 +170,10 @@
 				(at start (station-occupied ?s))
 				(at end (not (station-occupied ?s)))
 
-				(at start (not (item-at ?p ?s)))
-				(at end (item-at ?pd ?s))
+				(at start (not (item-at ?pa ?s)))
+
+				(at end (plate-is-dish ?pl pasta-dish))
+				(at start (plate-is-occupied ?pl))
 	)
 )
 

@@ -18,13 +18,13 @@
 	lettuce1 lettuce2	- lettuce
 	pasta1 pasta2		- pasta
 
-	; Meals
-	salad1 salad2		- salad
-	pasta_meal1			- pasta_meal
-	pasta_meal2			- pasta_meal
+	; Plates
+
+	plate1 plate2 plate3 plate4	- plate
 
 	; Orders
-	order1 order2 order3 order4 - order
+	order1 order4 - order
+;	order1 order2 order3 order4 - order
 )
 
 (:init
@@ -42,18 +42,24 @@
 	(item-at pasta1 storage_room1)
 	(item-at pasta2 storage_room1)
 
+	; Items at put on plate station
+	(item-at plate1 put_on_plate_station1)
+	(item-at plate2 put_on_plate_station1)
+	(item-at plate3 put_on_plate_station1)
+	(item-at plate4 put_on_plate_station1)
+
 	; Orders
-	(order-is-meal order1 salad1)
-	(order-is-meal order2 salad2)
-	(order-is-meal order3 pasta_meal1)
-	(order-is-meal order4 pasta_meal2)
+	(order-is order1 salad)
+;	(order-is order2 salad)
+;	(order-is order3 pasta-dish)
+	(order-is order4 pasta-dish)
 )
 
 (:goal 
 	(and
 		(delivered order1)
-		(delivered order2)
-		(delivered order3)
+;		(delivered order2)
+;		(delivered order3)
 		(delivered order4)
 	)
 )
