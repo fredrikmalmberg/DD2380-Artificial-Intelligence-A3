@@ -1,3 +1,8 @@
+; Domain that incorporates a plan metric that approximates minimizing
+; the number of orders that are not delivered on time
+;
+; The domain definition is based on the general object-based domain
+
 (define (domain overcooked_metric)
 
 (:requirements
@@ -56,12 +61,27 @@
 )
 
 (:functions 
+	; Here the functions are defined that are required to implement 
+	; modified plan metric
+
+	; Total cost is the number of orders that are not delivered on time
 	(total-cost				) - number
+
+	; Every chef has a timer that approximates the total time elapsed in the world.
+	; This solution draws on the fact that the plans generated tend to keep
+	; the chefs busy almost all the time. I.e. if we just add together the durations
+	; of the actions taking by any single chef, that sum will be close to the
+	; total time elapsed in the world.
 	(timer					?c - chef) - number
+
+	; Every order has a target time when it should be delivered
 	(delivery-time-goal		?o - order) - number
 )
 
 (:durative-action deliver
+	; Even though there is no chef that actually delivers an order, we have to
+	; add a chef as a parameter in order to be able to read the value of some
+	; chef's timer
 	:parameters (?c - chef ?st - delivery_station ?o - order ?m - meal)
 	:duration (= ?duration 1)
 	:condition (and
@@ -71,6 +91,8 @@
 	:effect (and
 				(at start (not (item-at ?m ?st)))
 				(at end (delivered ?o))
+				; Here the total cost function is updated, through a conditional effect:
+				; If the order is NOT delivered on time, the cost function will be increased
 				(when
 					(at end (< (delivery-time-goal ?o) (timer ?c)))
 					(at end (increase (total-cost) 1))
@@ -97,6 +119,8 @@
 				(at start (not (item-at ?mi ?here)))
 				(at end (item-at ?mi ?there))
 
+				; Every action that a chef takes increases that chef's timer
+				; with the duration of the action
 				(at end (increase (timer ?c) 1))
 	)
 )
@@ -114,6 +138,8 @@
 				(at end (chef-at ?c ?to))
 				(at end (chef-available ?c ))
 
+				; Every action that a chef takes increases that chef's timer
+				; with the duration of the action
 				(at end (increase (timer ?c) 1))
 	)
 )
@@ -145,6 +171,8 @@
 				(at start (not (item-at ?l ?s)))
 				(at end (item-at ?salad ?s))
 
+				; Every action that a chef takes increases that chef's timer
+				; with the duration of the action
 				(at end (increase (timer ?c) 2))
 	)
 )
@@ -171,6 +199,8 @@
 				(at start (not (item-at ?p ?s)))
 				(at end (item-at ?pd ?s))
 
+				; Every action that a chef takes increases that chef's timer
+				; with the duration of the action
 				(at end (increase (timer ?c) 2))
 	)
 )
@@ -196,6 +226,8 @@
 				
 				(at end (is-cut ?i))
 
+				; Every action that a chef takes increases that chef's timer
+				; with the duration of the action
 				(at end (increase (timer ?c) 2))
 	)
 )
@@ -221,6 +253,8 @@
 				
 				(at end (is-cooked ?i))
 
+				; Every action that a chef takes increases that chef's timer
+				; with the duration of the action
 				(at end (increase (timer ?c) 3))
 	)
 )

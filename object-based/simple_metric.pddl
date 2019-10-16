@@ -1,6 +1,12 @@
+; Problem definition for the the domain that incorporates a plan
+; metric that approximates minimizing the number of orders that
+; are not delivered on time
+
 (define (problem simple_metric)
 
 (:domain overcooked_metric)
+
+; Standard setup in terms of objects
 
 (:objects
 	chef1				- chef
@@ -28,10 +34,13 @@
 )
 
 (:init
+
+	; Initializing the cost function
 	(= (total-cost) 0)
 
 	(chef-at chef1 storage_room1)
 	(chef-available chef1)
+	; Initialize each chef's associated timer
 	(= (timer chef1) 0)
 
 	(chef-at chef2 storage_room1)
@@ -52,6 +61,7 @@
 	(order-is-meal order3 pasta_meal1)
 	(order-is-meal order4 pasta_meal2)
 
+	; Setting delivery timing targets for each order
 	(= (delivery-time-goal order1) 15)
 	(= (delivery-time-goal order2) 20)
 	(= (delivery-time-goal order3) 30)
@@ -67,6 +77,8 @@
 	)
 )
 
+; Specifying that the planner should find a plan that minimizes the
+; total cost
 (:metric minimize (total-cost)
 )
 
